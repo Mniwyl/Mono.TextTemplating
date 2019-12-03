@@ -93,7 +93,15 @@ namespace Mono.TextTemplating.Roslyn
 				Success = false,
 				Output = new List<string> (),
 				Errors = failures.Select (
-					x => new CodeCompilerError {Message = x.GetMessage ()}).ToList (),
+					x => new CodeCompilerError {
+						Message = x.GetMessage(),
+						Column = x.Location.GetMappedLineSpan().StartLinePosition.Character,
+						Line = x.Location.GetMappedLineSpan().StartLinePosition.Line,
+						EndLine = x.Location.GetMappedLineSpan().EndLinePosition.Line,
+						EndColumn = x.Location.GetMappedLineSpan().EndLinePosition.Character,
+						IsError = x.IsWarningAsError,
+						Origin = x.Location.GetMappedLineSpan().Path
+					}).ToList (),
 			};
 		}
 	}
